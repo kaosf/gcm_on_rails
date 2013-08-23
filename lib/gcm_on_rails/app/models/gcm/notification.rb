@@ -14,7 +14,7 @@ class Gcm::Notification < Gcm::Base
     #
     # This method expects an Array of Gcm::Notifications. If no parameter is passed
     # in then it will use the following:
-    #   Gcm::Notification.all(:conditions => {:sent_at => nil})
+    #   Gcm::Notification.where(sent_at: nil)
     #
     # As each Gcm::Notification is sent the <tt>sent_at</tt> column will be timestamped,
     # so as to not be sent again.
@@ -28,7 +28,7 @@ class Gcm::Notification < Gcm::Base
     # {:message=>"{\"multicast_id\":6085691036338669615,\"success\":1,\"failure\":0,\"canonical_ids\":0,\"results\":[{\"message_id\":\"0:1349723376618187%d702725e98d39af3\"}]}", :code=>200}
     #
     #
-    def send_notifications(notifications = Gcm::Notification.all(:conditions => {:sent_at => nil}, :joins => :device, :readonly => false))
+    def send_notifications(notifications = Gcm::Notification.where(sent_at: nil).joins(:device).readonly(false))
 
       if configatron.gcm_on_rails.delivery_format and configatron.gcm_on_rails.delivery_format == 'plain_text'
         format = "plain_text"
